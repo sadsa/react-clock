@@ -1,23 +1,10 @@
 import React, { Component } from 'react';
 import ClockHand from './ClockHand'; 
+import ClockService from './ClockService';
 import './Clock.css';
+ 
 
-
-function calcAngleForSeconds(date) {
-  const seconds = date.getSeconds();
-  return (seconds * 6);
-}
-
-function calcAngleForMinutes(date) {
-  const minutes = date.getMinutes();
-  return (minutes * 6);
-}
-
-function calcAngleForHours(date) {
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  return (hours * 30) + (minutes / 2);
-}  
+const INTERVAL_DELAY = 1000;
 
 class Clock extends Component {
   state = {
@@ -47,15 +34,20 @@ class Clock extends Component {
   }
 
   startClock() {
+    this.tick();
+    setInterval(this.tick.bind(this), INTERVAL_DELAY);
+  }
+
+  tick() {
     const date = new Date();
     this.setHandPositions(date);
   }
 
   setHandPositions(date) {
     const angles = {
-      seconds: calcAngleForSeconds(date),
-      minutes: calcAngleForMinutes(date),
-      hours: calcAngleForHours(date)
+      seconds: ClockService.calcAngleForSeconds(date),
+      minutes: ClockService.calcAngleForMinutes(date),
+      hours: ClockService.calcAngleForHours(date)
     };
 
     this.updateHandAngles(angles);
